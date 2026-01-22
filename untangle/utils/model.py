@@ -35,6 +35,7 @@ from untangle.wrappers import (
     SNGPWrapper,
     SWAGWrapper,
     TemperatureWrapper,
+    AdaptedLaplaceWrapper
 )
 
 logger = logging.getLogger(__name__)
@@ -148,6 +149,7 @@ def wrap_model(  # noqa: C901
     use_batched_flow: bool,
     edl_activation: str,
     checkpoint_path: str,
+    subnetwork_layers: list[str],
 ) -> torch.nn.Module:
     """Wraps the given model with the specified wrapper.
 
@@ -280,6 +282,17 @@ def wrap_model(  # noqa: C901
             weight_path=weight_paths[0],
             pred_type=pred_type,
             hessian_structure=hessian_structure,
+        )
+    elif model_wrapper_name == "adapted_laplace":
+        wrapped_model = LaplaceWrapper(
+            model=model,
+            num_mc_samples=num_mc_samples,
+            num_mc_samples_cv=num_mc_samples_cv,
+            weight_path=weight_paths[0],
+            pred_type=pred_type,
+            hessian_structure=hessian_structure,
+            subset_of_weights="subnetwork",
+            subnetwork_layers=subnetwork_layers,
         )
     elif model_wrapper_name == "swag":
         wrapped_model = SWAGWrapper(

@@ -47,6 +47,7 @@ from untangle.wrappers import (
     SNGPWrapper,
     SWAGWrapper,
     TemperatureWrapper,
+    AdaptedLaplaceWrapper,
 )
 from validate import (
     evaluate,
@@ -1349,6 +1350,10 @@ def update_post_hoc_method(
     """
     if isinstance(model, LaplaceWrapper):
         model.perform_laplace_approximation(
+            train_loader=train_loader, val_loader=hard_id_eval_loader
+        )
+    elif isinstance(model, AdaptedLaplaceWrapper):
+        model.adapted_perform_laplace_approximation(
             train_loader=train_loader, val_loader=hard_id_eval_loader
         )
     elif isinstance(model, MahalanobisWrapper):
