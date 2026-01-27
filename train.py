@@ -602,6 +602,7 @@ def main() -> None:
         use_batched_flow=args.use_batched_flow,
         edl_activation=args.edl_activation,
         checkpoint_path=args.initial_checkpoint_path,
+        subnetwork_layers=args.subnetwork_layers,
     )
 
     # Move model to device
