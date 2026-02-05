@@ -71,19 +71,24 @@ class AdaptedLaplaceWrapper(DistributionalWrapper):
             train_loader: DataLoader or PrefetchLoader for the training data.
             val_loader: DataLoader or PrefetchLoader for the validation data.
         """
+        all_leafs = self._get_module_leaf_names(self.model)
+        layer_leafs = [name for name in all_leafs if name.startswith('layer1.')]
+
         with torch.enable_grad():
             subnetwork_mask = ModuleNameSubnetMask(
             self.model, 
-            module_names=self._subnetwork_layers
+            module_names=layer_leafs
+            #module_names=self._subnetwork_layers
             )
             subnetwork_mask.select()
+            print(f"*****\nNumber of subnetwork indices: {len(subnetwork_mask.indices)}\n*****")
 
             self._laplace_model: LLLaplace = Laplace(
                 self.model,
                 "classification",
                 subset_of_weights=self._subset_of_weights,
                 hessian_structure=self._hessian_structure,
-                subnetwork_indices=subnetwork_mask.indices,
+                subnetwork_indices=subnetwork_mask.indices.cpu().long(),
             )
             logger.info("Starting Laplace approximation with defined subset")
             self._laplace_model.fit(train_loader)
@@ -355,3 +360,19 @@ class AdaptedLaplaceWrapper(DistributionalWrapper):
             Js = torch.cat([Js, identity], dim=2)
 
         return Js.detach(), logit.detach()
+    
+    @staticmethod
+    def _get_module_leaf_names(model: nn.Module) -> list[str]:
+        """Gets the names of all leaf modules in the model.
+
+        Args:
+            model: The neural network model.
+
+        Returns:
+            List of leaf module names.
+        """
+        leaf_names = []
+        for name, module in model.named_modules():
+            if len(list(module.children())) == 0 and len(list(module.parameters(recurse=False))) > 0:
+                leaf_names.append(name)
+        return leaf_names

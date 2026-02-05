@@ -202,6 +202,7 @@ def wrap_model(  # noqa: C901
         use_batched_flow: Whether to use batched flow.
         edl_activation: Activation function for EDL.
         checkpoint_path: Path to the checkpoint.
+        subnetwork_layers: Layers of the subnetwork.
 
     Returns:
         The wrapped model.
@@ -283,8 +284,8 @@ def wrap_model(  # noqa: C901
             pred_type=pred_type,
             hessian_structure=hessian_structure,
         )
-    elif model_wrapper_name == "adapted_laplace":
-        wrapped_model = LaplaceWrapper(
+    elif model_wrapper_name == "adapted-laplace":
+        wrapped_model = AdaptedLaplaceWrapper(
             model=model,
             num_mc_samples=num_mc_samples,
             num_mc_samples_cv=num_mc_samples_cv,

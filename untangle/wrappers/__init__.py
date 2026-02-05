@@ -27,6 +27,7 @@ __all__ = [
     "ShallowEnsembleWrapper",
     "SpecialWrapper",
     "TemperatureWrapper",
+    "AdaptedLaplaceWrapper",
 ]
 
 from .ce_baseline_wrapper import CEBaselineWrapper
@@ -61,3 +62,4 @@ from .shallow_ensemble_wrapper import ShallowEnsembleWrapper
 from .sngp_wrapper import SNGPWrapper
 from .swag_wrapper import SWAGWrapper
 from .temperature_wrapper import TemperatureWrapper
+from .adapted_laplace_wrapper import AdaptedLaplaceWrapper

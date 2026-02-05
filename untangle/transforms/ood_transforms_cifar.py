@@ -453,7 +453,7 @@ def motion_blur(
 
     x.motion_blur(radius=c[0], sigma=c[1], angle=rng.uniform(-45, 45))
 
-    x = cv2.imdecode(np.fromstring(x.make_blob(), np.uint8), cv2.IMREAD_UNCHANGED)
+    x = cv2.imdecode(np.frombuffer(x.make_blob(), np.uint8), cv2.IMREAD_UNCHANGED)
 
     if x.shape != (32, 32):
         x = np.clip(x[..., [2, 1, 0]], 0, 255)  # BGR to RGB
@@ -585,7 +585,7 @@ def snow(
 
     snow_layer = (
         cv2.imdecode(
-            np.fromstring(snow_layer.make_blob(), np.uint8), cv2.IMREAD_UNCHANGED
+            np.frombuffer(snow_layer.make_blob(), np.uint8), cv2.IMREAD_UNCHANGED
         )
         / 255.0
     )

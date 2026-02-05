@@ -38,6 +38,14 @@ def string_tuple(string: str) -> tuple[str, ...]:
     return tuple(string.split(","))
 
 
+def string_list(string: str) -> list[str]:
+    """Splits a comma-separated string into a list of strings."""
+    if not string:
+        return []
+
+    return string.split(",")
+
+
 def path_tuple(string: str) -> tuple[Path, ...]:
     """Converts a comma-separated string of paths to a tuple of Path objects."""
     if not string:
@@ -541,6 +549,18 @@ group.add_argument(
     type=int,
     default=2,
     help="Padding for CIFAR",
+)
+group.add_argument(
+    "--subnetwork-layers",
+    type=string_list,
+    default="layer.1",
+    help="List of subnetwork layers for the adapted Laplace method",
+)
+group.add_argument(
+    "--subset-of-weights",
+    type=str,
+    default="all",
+    help="Which subset of weights to use in the adapted Laplace method",
 )
 
 # Loss parameters
